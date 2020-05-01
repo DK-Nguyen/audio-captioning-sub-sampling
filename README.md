@@ -1,5 +1,9 @@
 # Audio captioning with language modelling
 
+Train with Narvi: remember to copy 
+```coco_caption/pycocoevalcap/spice/lib/stanford-corenlp-3.6.0-models.jar```
+file there.
+
 Translation metrics evaluated with https://github.com/tylin/coco-caption.git,
 requires download of Stanford CoreNLP (with coco_caption/get_stanford_models.sh
 or by following the commands there).
