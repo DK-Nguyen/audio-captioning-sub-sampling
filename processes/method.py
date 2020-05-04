@@ -451,13 +451,14 @@ def _load_frequencies_file(settings_files: MutableMapping[str, Any],
 def method(settings: MutableMapping[str, Any],
            job_id: int) \
         -> None:
-    """Baseline method.
+    """Training, evaluating
 
     :param settings: Settings to be used.
     :type settings: dict
     :param job_id: Unique ID of the SLURM job.
     :type job_id: int
     """
+    method_start = time()
     logger_main = logger.bind(is_caption=False, indent=0)
     logger_main.info('Bootstrapping method')
     pretty_printer = printing.get_pretty_printer()
@@ -548,6 +549,12 @@ def method(settings: MutableMapping[str, Any],
             settings_io=settings['dirs_and_files'],
             indices_list=indices_list)
         logger_inner.info('Evaluation done')
+
+    method_end = time()
+    hours, rem = divmod(method_end-method_start, 3600)
+    minutes, secs = divmod(rem, 60)
+    logger_main.info('everything takes: {:0>2}:{:0>2}:{:05.2f}'
+                     .format(int(hours), int(minutes), secs))
 
 
 def main():

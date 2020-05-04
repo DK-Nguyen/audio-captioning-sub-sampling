@@ -14,7 +14,8 @@ from torch.utils.data import DataLoader
 from torch.optim.optimizer import Optimizer
 
 from models import BaselineModel, ModelWithLM, BaselineDCASE, \
-    ModelWithLM2
+    SubSamplingAttentionModel, ModelWithLM2
+    # OptimusPrime
 
 __author__ = 'Konstantinos Drossos -- Tampere University'
 __docformat__ = 'reStructuredText'
@@ -75,6 +76,12 @@ def get_model(settings_model: MutableMapping[str, Union[str, MutableMapping]],
         model = BaselineModel
     elif model_name == 'baseline_dcase':
         model = BaselineDCASE
+    # elif model_name == 'optimus_prime':
+    #     model = OptimusPrime
+    elif model_name == 'dk':
+        model = SubSamplingAttentionModel
+    elif model_name == 'optimus_prime_tf':
+        pass
     else:
         raise AttributeError(f'Unknown model type '
                              f'{settings_model["model_name"]}.')
@@ -192,6 +199,7 @@ def module_forward_passing(data: MutableSequence[Tensor],
     x, y, f_names = [i.to(device) if isinstance(i, Tensor)
                      else i for i in data]
     in_args = [x, y if use_y else None]
-    return module(*in_args), y, f_names
+    # return module(*in_args), y, f_names
+    return module(x), y, f_names
 
 # EOF

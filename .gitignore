@@ -218,3 +218,5 @@ local_job_baseline.sh
 local_job_dcase.sh
 local_job_lm.sh
 outputs/
+
+.env-audio-cap-lm/

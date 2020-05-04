@@ -26,8 +26,8 @@ def get_argument_parser():
           'help': 'Unique identifier for the job at SLURM.'}],
         # ---------------------------------
         [['--file-dir', '-d'],
-         {'type': str, 'default': 'settings',
-          'help': 'Directory that holds the settings file (default: `settings`).'}],
+         {'type': str, 'default': 'settings/settings_default',
+          'help': 'Directory that holds the settings file (default: `settings/settings_default`).'}],
         # ---------------------------------
         [['--file-ext', '-e'],
          {'type': str, 'default': 'yaml',
