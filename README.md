@@ -2,7 +2,8 @@
 
 Train with Narvi: remember to copy the file 
 ```coco_caption/pycocoevalcap/spice/lib/stanford-corenlp-3.6.0-models.jar```
-and the directory ```data/``` there.
+, the directory ```data/```, and 
+```coco_caption/pycocoevalcap/meteor/data/paraphrase-en.gz``` there.
 
 Translation metrics evaluated with https://github.com/tylin/coco-caption.git,
 requires download of Stanford CoreNLP (with coco_caption/get_stanford_models.sh
