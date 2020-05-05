@@ -64,11 +64,9 @@ class ClothoDataset(Dataset):
             i for i in the_dir.iterdir() if i.suffix == '.npy'])
 
         if split.lower() in ['development', 'validation']:
+            validation_stems = [] if validation_files is None \
+                else [v_i.stem for v_i in validation_files]
 
-            if validation_files is None:
-                raise AttributeError('Validation files cannot be wrong when split '
-                                     f'is {split}')
-            validation_stems = [v_i.stem for v_i in validation_files]
             self.examples = [s_i for s_i in self.examples
                              if (_get_audio_file_name(s_i) in validation_stems) ^
                              (split.lower() == 'development')]

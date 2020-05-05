@@ -245,20 +245,24 @@ def _do_training(model: Module,
         settings_data=settings_data,
         settings_io=settings_io)
 
-    logger_main.info('Getting validation data')
-    validation_data = get_clotho_loader(
-        'validation',
-        is_training=True,
-        settings_data=settings_data,
-        settings_io=settings_io)
+    if settings_data['use_validation_split']:
+        logger_main.info('Getting validation data')
+        validation_data = get_clotho_loader(
+            'validation',
+            is_training=True,
+            settings_data=settings_data,
+            settings_io=settings_io)
+    else:
+        validation_data = None
 
     logger_main.info('Done')
     try:
-        logger_inner.info('Setting batch counter for scheduled sampling')
         model.decoder.batch_counter = len(training_data)
         logger_inner.info(f'Batch counter setting done, value {model.batch_counter}')
     except AttributeError:
         logger_inner.info('Model does not have batch counter')
+
+    logger_inner.info(f'Available batches: {len(training_data)}')
 
     # Initialize loss and optimizer objects
     if frequencies_list is not None:
@@ -299,42 +303,52 @@ def _do_training(model: Module,
         # Get mean loss of training and print it with logger
         training_loss = objective_output.mean().item()
 
-        # Do a complete pass over our validation data
-        model.eval()
-        with no_grad():
-            epoch_output_v = module_epoch_passing(
-                data=validation_data,
-                module=model,
-                objective=objective,
-                optimizer=None)
-        objective_output_v, output_y_hat_v, output_y_v, f_names_v = epoch_output_v
+        if settings_data['use_validation_split']:
+            # Do a complete pass over our validation data
+            model.eval()
+            with no_grad():
+                epoch_output_v = module_epoch_passing(
+                    data=validation_data,
+                    module=model,
+                    objective=objective,
+                    optimizer=None)
+            objective_output_v, output_y_hat_v, output_y_v, f_names_v = epoch_output_v
 
-        # Get mean loss of training and print it with logger
-        validation_loss = objective_output_v.mean().item()
+            # Get mean loss of training and print it with logger
+            validation_loss = objective_output_v.mean().item()
+            val_loss_str = f'{validation_loss:>7.4f}'
+
+            logger_main.info(f'Epoch: {epoch:05d} -- '
+                             f'Loss (Tr/Va) : {training_loss:>7.4f}/{val_loss_str} | '
+                             f'Time: {time() - start_time:>5.3f}')
+        else:
+            validation_metric = training_loss
+            val_loss_str = '--'
 
         logger_main.info(f'Epoch: {epoch:05d} -- '
-                         f'Loss (Tr/Va) : {training_loss:>7.4f}/{validation_loss:>7.4f} | '
+                         f'Loss (Tr/Va) : {training_loss:>7.4f}/{val_loss_str} | '
                          f'Time: {time() - start_time:>5.3f}')
 
-        # Check if we have to decode captions for the current epoch
-        if divmod(epoch + 1,
-                  settings_training['text_output_every_nb_epochs'])[-1] == 0:
+        if settings_data['use_validation_split']:
+            # Check if we have to decode captions for the current epoch
+            if divmod(epoch + 1,
+                      settings_training['text_output_every_nb_epochs'])[-1] == 0:
 
-            # Do the decoding
-            captions_pred, captions_gt = _decode_outputs(
-                output_y_hat_v, output_y_v,
-                indices_object=indices_list,
-                file_names=[Path(i) for i in f_names_v],
-                eos_token='<eos>',
-                print_to_console=False)
+                # Do the decoding
+                captions_pred, captions_gt = _decode_outputs(
+                    output_y_hat_v, output_y_v,
+                    indices_object=indices_list,
+                    file_names=[Path(i) for i in f_names_v],
+                    eos_token='<eos>',
+                    print_to_console=False)
 
-            logger_main.info('Calculating metrics')
-            metrics = evaluate_metrics(captions_pred, captions_gt)
+                logger_main.info('Calculating metrics')
+                metrics = evaluate_metrics(captions_pred, captions_gt)
 
-            for metric, values in metrics.items():
-                logger_main.info(f'{metric:<7s}: {values["score"]:7.4f}')
-            logger_main.info('Calculation of metrics done')
-            validation_metric = metrics["spider"]["score"]
+                for metric, values in metrics.items():
+                    logger_main.info(f'{metric:<7s}: {values["score"]:7.4f}')
+                logger_main.info('Calculation of metrics done')
+                validation_metric = metrics["spider"]["score"]
 
         # Check improvement of loss
         if validation_metric - prv_validation_metric > loss_thr:
