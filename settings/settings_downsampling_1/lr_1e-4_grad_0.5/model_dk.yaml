@@ -6,7 +6,7 @@
 # ---------------------------------
 model_name: 'dk'
 # -----------------------------------
-use_pre_trained_model: Yes
+use_pre_trained_model: No
 # -----------------------------------
 encoder:
   input_dim_encoder: 64
