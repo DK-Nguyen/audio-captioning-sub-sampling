@@ -220,3 +220,6 @@ local_job_lm.sh
 outputs/
 
 .env-audio-cap-lm/
+notes/
+papers/
+saved_outputs/

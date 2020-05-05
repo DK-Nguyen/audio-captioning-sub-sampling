@@ -51,7 +51,6 @@ class SubSamplingAttentionModel(Module):
         :type max_out_t_steps: int
         :param mode: if mode is 0, use decoder without attention,
                      if mode is 1, use decoder with attention (Kostas's version)
-                     if mode is 2, use decoder with attention (DK's version)
                      default = 1
         :type mode: int
         """

@@ -33,7 +33,7 @@ dataset:
 model:
   model_dir: 'models'
   checkpoint_model_name: 'down_1_lr_1e-4_grad_1.0.pt'
-  pre_trained_model_name: 'nothing_yet.pt'
+  pre_trained_model_name: 'epoch_00059_down_1_lr_1e-4_grad_1.0.pt'
 # -----------------------------------
 logging:
   logger_dir: 'logging'

@@ -15,12 +15,12 @@ data:
   num_workers: 6
   drop_last: Yes
   use_multiple_mode: Yes
-  use_validation_split: Yes
+  use_validation_split: No
 # ----------------------
 training:
   nb_epochs: 1000
-  patience: 100
-  loss_thr: !!float 1e-4
+  patience: 50
+  loss_thr: !!float 1e-3
   optimizer:
     lr: !!float 1e-4
   grad_norm:
