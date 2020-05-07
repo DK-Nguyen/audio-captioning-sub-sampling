@@ -8,7 +8,7 @@
 workflow:
   dataset_creation: No
   dnn_training: Yes
-  dnn_evaluation: Yes
+  dnn_evaluation: No
 # ---------------------------------
 dataset_creation_settings: !include dataset_creation.yaml
 # -----------------------------------
