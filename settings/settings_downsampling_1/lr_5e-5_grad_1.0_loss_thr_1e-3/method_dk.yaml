@@ -20,11 +20,11 @@ data:
 training:
   nb_epochs: 1000
   patience: 100
-  loss_thr: !!float 1e-4
+  loss_thr: !!float 1e-3
   optimizer:
-    lr: !!float 5e-4
+    lr: !!float 5e-5
   grad_norm:
-    value: !!float 1.5
+    value: !!float 1.0
     norm: 2
   force_cpu: No
   text_output_every_nb_epochs: !!int 10
