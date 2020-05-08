@@ -8,7 +8,7 @@ from typing import MutableMapping, MutableSequence,\
     Any, Union, List, Dict, Tuple, Optional
 
 from torch import Tensor, no_grad, save as pt_save, \
-    load as pt_load, randperm
+    load as pt_load
 from torch.nn import CrossEntropyLoss, Module, DataParallel
 from torch.optim import Adam
 from torch.nn.functional import softmax
@@ -276,7 +276,14 @@ def _do_training(model: Module,
                 frequencies_tensor.max())
     else:
         frequencies_tensor = None
-    objective = CrossEntropyLoss(weight=frequencies_tensor)
+
+    if settings_training.get('use_lsr', False):
+        objective = LabelSmoothingRegularization(
+            nb_classes=model.nb_classes,
+            eps=settings_training['lsr_loss']['eps'])
+    else:
+        objective = CrossEntropyLoss(weight=frequencies_tensor)
+
     optimizer = Adam(params=model.parameters(),
                      lr=settings_training['optimizer']['lr'])
 
@@ -317,6 +324,7 @@ def _do_training(model: Module,
             # Get mean loss of training and print it with logger
             validation_loss = objective_output_v.mean().item()
             val_loss_str = f'{validation_loss:>7.4f}'
+            early_stopping_dif = validation_metric - prv_validation_metric
 
             logger_main.info(f'Epoch: {epoch:05d} -- '
                              f'Loss (Tr/Va) : {training_loss:>7.4f}/{val_loss_str} | '
@@ -324,6 +332,8 @@ def _do_training(model: Module,
         else:
             validation_metric = training_loss
             val_loss_str = '--'
+
+            early_stopping_dif = prv_validation_metric - validation_metric
 
         logger_main.info(f'Epoch: {epoch:05d} -- '
                          f'Loss (Tr/Va) : {training_loss:>7.4f}/{val_loss_str} | '
@@ -351,7 +361,7 @@ def _do_training(model: Module,
                 validation_metric = metrics["spider"]["score"]
 
         # Check improvement of loss
-        if validation_metric - prv_validation_metric > loss_thr:
+        if early_stopping_dif > loss_thr:
             # Log the current loss
             prv_validation_metric = validation_metric
 
@@ -384,6 +394,8 @@ def _do_training(model: Module,
             logger_main.info('No lower training loss for '
                              f'{patience_counter} epochs. '
                              'Training stops.')
+            logger_main.info(f'Best validation metric {validation_metric} '
+                             f'at epoch {best_epoch}.')
             break
 
     # Inform that we are done
