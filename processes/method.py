@@ -224,7 +224,7 @@ def _do_training(model: Module,
     :type frequencies_list: list[int]|None, optional
     """
     # Initialize variables for the training process
-    prv_validation_metric = 0
+    prv_validation_metric = 0 if settings_data['use_validation_split'] else 1e4
     validation_metric = 0
     patience: int = settings_training['patience']
     loss_thr: float = settings_training['loss_thr']
@@ -363,6 +363,7 @@ def _do_training(model: Module,
         # Check improvement of loss
         if early_stopping_dif > loss_thr:
             # Log the current loss
+            logger_main.info('Improved validation metric | Saving model')
             prv_validation_metric = validation_metric
 
             # Log the current epoch
