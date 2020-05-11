@@ -19,7 +19,7 @@ data:
 # ----------------------
 training:
   nb_epochs: 1000
-  patience: 300
+  patience: 100
   loss_thr: !!float 1e-3
   optimizer:
     lr: !!float 1e-4
