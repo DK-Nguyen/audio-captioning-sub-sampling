@@ -1,0 +1,41 @@
+# =================================
+# Settings for file structure.
+#
+# author: Konstantinos Drossos
+# affiliation: Tampere University
+# =================================
+root_dirs:
+  outputs: 'outputs'
+  data: 'data'
+# -----------------------------------
+dataset:
+  development: &dev 'development'
+  evaluation: &eva 'evaluation'
+  features_dirs:
+    output: 'data_splits'
+    development: *dev
+    evaluation: *eva
+  audio_dirs:
+    downloaded: 'clotho_audio_files'
+    output: 'data_splits_audio'
+    development: *dev
+    evaluation: *eva
+  annotations_dir: 'clotho_csv_files'
+  pickle_files_dir: 'pickles'
+  files:
+    np_file_name_template: 'clotho_file_{audio_file_name}_{caption_index}.npy'
+    words_list_file_name: 'words_list.p'
+    words_counter_file_name: 'words_frequencies.p'
+    characters_list_file_name: 'characters_list.p'
+    characters_frequencies_file_name: 'characters_frequencies.p'
+    validation_files_file_name: 'validation_file_names.p'
+# -----------------------------------
+model:
+  model_dir: 'models'
+  checkpoint_model_name: 'down_1_lr_1e-4_grad_0.5_loss_thr_1e-1_no_val_19May.pt'
+  pre_trained_model_name: 'nothing.pt'
+# -----------------------------------
+logging:
+  logger_dir: 'logging'
+  caption_logger_file: 'down_1_lr_1e-4_grad_0.5_loss_thr_1e-1_no_val_19May.txt'
+# EOF
