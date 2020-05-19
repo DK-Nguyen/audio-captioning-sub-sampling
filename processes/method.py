@@ -14,6 +14,7 @@ from torch.optim import Adam
 from torch.nn.functional import softmax
 from loguru import logger
 
+from modules.lsr_loss import LabelSmoothingRegularization
 from tools import file_io, printing
 from tools.argument_parsing import get_argument_parser
 from tools.model import module_epoch_passing, get_model,\
@@ -41,7 +42,8 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
                     indices_object: MutableSequence[str],
                     file_names: MutableSequence[Path],
                     eos_token: str,
-                    print_to_console: bool) \
+                    print_to_console: bool,
+                    log_captions: Optional[bool] = True) \
         -> Tuple[List[Dict[str, str]], List[Dict[str, str]]]:
     """Decodes predicted output to string.
 
@@ -57,13 +59,16 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
     :type eos_token: str
     :param print_to_console: Print captions to console?
     :type print_to_console: bool
+    :param log_captions: Shall we log the captions? Defaults to True
+    :type log_captions: bool, optional
     :return: Predicted and ground truth captions for scoring.
     :rtype: (list[dict[str, str]], list[dict[str, str]])
     """
     caption_logger = logger.bind(is_caption=True, indent=None)
     main_logger = logger.bind(is_caption=False, indent=0)
-    caption_logger.info('Captions start')
-    main_logger.info('Starting decoding of captions')
+    if log_captions:
+        caption_logger.info('Captions start')
+        main_logger.info('Starting decoding of captions')
     text_sep = '-' * 100
 
     captions_pred: List[Dict] = []
@@ -111,12 +116,13 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
                     captions_gt[d_i] = d
                     break
 
-        log_strings = [f'Captions for file {f_name.stem}: ',
-                       f'\tPredicted caption: {predicted_caption}',
-                       f'\tOriginal caption: {gt_caption}\n\n']
+        if log_captions:
+            log_strings = [f'Captions for file {f_name.stem}: ',
+                           f'\tPredicted caption: {predicted_caption}',
+                           f'\tOriginal caption: {gt_caption}\n\n']
 
-        [caption_logger.info(log_string)
-         for log_string in log_strings]
+            [caption_logger.info(log_string)
+             for log_string in log_strings]
 
         if print_to_console:
             [main_logger.info(log_string)
@@ -125,8 +131,9 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
     if print_to_console:
         main_logger.info(f'{text_sep}\n{text_sep}\n{text_sep}\n\n')
 
-    logger.bind(is_caption=False, indent=0).info(
-        'Decoding of captions ended')
+    if log_captions:
+        logger.bind(is_caption=False, indent=0).info(
+            'Decoding of captions ended')
 
     return captions_pred, captions_gt
 
@@ -295,7 +302,7 @@ def _do_training(model: Module,
         # Log starting time
         start_time = time()
 
-        model.train()
+        model = model.train()
         # Do a complete pass over our training data
         epoch_output = module_epoch_passing(
             data=training_data,
@@ -312,7 +319,7 @@ def _do_training(model: Module,
 
         if settings_data['use_validation_split']:
             # Do a complete pass over our validation data
-            model.eval()
+            model = model.eval()
             with no_grad():
                 epoch_output_v = module_epoch_passing(
                     data=validation_data,
@@ -326,39 +333,47 @@ def _do_training(model: Module,
             val_loss_str = f'{validation_loss:>7.4f}'
             early_stopping_dif = validation_metric - prv_validation_metric
 
-            logger_main.info(f'Epoch: {epoch:05d} -- '
-                             f'Loss (Tr/Va) : {training_loss:>7.4f}/{val_loss_str} | '
-                             f'Time: {time() - start_time:>5.3f}')
         else:
             validation_metric = training_loss
             val_loss_str = '--'
 
             early_stopping_dif = prv_validation_metric - validation_metric
 
-        logger_main.info(f'Epoch: {epoch:05d} -- '
-                         f'Loss (Tr/Va) : {training_loss:>7.4f}/{val_loss_str} | '
-                         f'Time: {time() - start_time:>5.3f}')
 
         if settings_data['use_validation_split']:
             # Check if we have to decode captions for the current epoch
-            if divmod(epoch + 1,
-                      settings_training['text_output_every_nb_epochs'])[-1] == 0:
+            do_captions_decoding = divmod(
+                epoch + 1, settings_training['text_output_every_nb_epochs'])[-1] == 0
 
-                # Do the decoding
-                captions_pred, captions_gt = _decode_outputs(
-                    output_y_hat_v, output_y_v,
-                    indices_object=indices_list,
-                    file_names=[Path(i) for i in f_names_v],
-                    eos_token='<eos>',
-                    print_to_console=False)
+            if do_captions_decoding:
+                log_captions = True
+            else:
+                log_captions = False
 
-                logger_main.info('Calculating metrics')
-                metrics = evaluate_metrics(captions_pred, captions_gt)
+            # Do the decoding
+            captions_pred, captions_gt = _decode_outputs(
+                output_y_hat_v, output_y_v,
+                indices_object=indices_list,
+                file_names=[Path(i) for i in f_names_v],
+                eos_token='<eos>',
+                print_to_console=False,
+                log_captions=log_captions)
 
+            metrics = evaluate_metrics(captions_pred, captions_gt)
+            metric_str = f'Spider: {metrics["spider"]["score"]:>7.4f} | '
+
+            if do_captions_decoding:
                 for metric, values in metrics.items():
                     logger_main.info(f'{metric:<7s}: {values["score"]:7.4f}')
                 logger_main.info('Calculation of metrics done')
-                validation_metric = metrics["spider"]["score"]
+
+            validation_metric = metrics["spider"]["score"]
+        else:
+            metric_str = ''
+
+        logger_main.info(f'Epoch: {epoch:05d} -- '
+                         f'Loss (Tr/Va) : {training_loss:>7.4f}/{val_loss_str} | '
+                         f'{metric_str}Time: {time() - start_time:>5.3f}')
 
         # Check improvement of loss
         if early_stopping_dif > loss_thr:
