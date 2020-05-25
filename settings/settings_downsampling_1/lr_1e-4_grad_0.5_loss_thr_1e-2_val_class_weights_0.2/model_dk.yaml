@@ -20,7 +20,7 @@ decoder:
   nb_classes:  # Empty, to be filled automatically.
   dropout_p_decoder: .25
   max_out_t_steps: 22
-  mode: 1
+  mode: 1  # 0: no attention, 1: attention
 # -----------------------------------
 teacher_forcing:
   gamma_factor: 10

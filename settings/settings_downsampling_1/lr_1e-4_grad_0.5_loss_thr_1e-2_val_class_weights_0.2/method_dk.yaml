@@ -15,7 +15,7 @@ data:
   num_workers: 6
   drop_last: Yes
   use_multiple_mode: Yes
-  use_validation_split: No
+  use_validation_split: Yes
 # ----------------------
 training:
   nb_epochs: 1000
@@ -29,8 +29,8 @@ training:
   force_cpu: No
   text_output_every_nb_epochs: !!int 10
   nb_examples_to_sample: 100
-  use_class_weights: No
+  use_class_weights: Yes
   use_y: No
-  clamp_value_freqs: !!float -1  # -1 is for ignoring, 0.4 if using use_class_weights
+  clamp_value_freqs: !!float 2e-1  # -1 is for ignoring, 0.2 if using use_class_weights
 
 # EOF
