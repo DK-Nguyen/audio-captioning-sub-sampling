@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+from loguru import logger
 from typing import Optional
 
 from torch import zeros, cat, Tensor
-from torch.nn import Module, GRUCell, Linear, Dropout
+from torch.nn import Module, GRUCell, Linear, Dropout, Sequential
 from torch.nn.functional import softmax
 
 __author__ = 'Konstantinos Drossos -- Tampere University'
@@ -19,6 +19,8 @@ class AttentionDecoder(Module):
                  output_dim: int,
                  nb_classes: int,
                  dropout_p: float,
+                 num_attn_layers: int,
+                 first_attn_layer_output_dim: int,
                  max_out_t_steps: Optional[int] = 22) \
             -> None:
         """Attention decoder for the baseline audio captioning method.
@@ -34,16 +36,61 @@ class AttentionDecoder(Module):
         :param max_out_t_steps: Maximum output time steps during inference.
         :type max_out_t_steps: int
         """
+        logger_inner = logger.bind(is_caption=False, indent=1)
+        logger_inner.info(f'Decoder with attention, no lm, {num_attn_layers} attn layers, '
+                          f'first output attn layer dim: {first_attn_layer_output_dim}')
+
         super(AttentionDecoder, self).__init__()
 
         self.input_dim = input_dim
         self.output_dim = output_dim
         self.nb_classes = nb_classes
         self.max_out_t_steps = max_out_t_steps
+        self.first_attn_layer_output_dim = first_attn_layer_output_dim
 
         self.dropout: Module = Dropout(p=dropout_p)
 
-        self.attention: Module = Linear(self.input_dim + self.output_dim, 1, bias=False)
+        if num_attn_layers == 1:
+            self.attention: Module = Linear(in_features=self.input_dim + self.output_dim,
+                                            out_features=1,
+                                            bias=True)
+        elif num_attn_layers == 2:
+            self.attention: Module = Sequential(
+                Linear(in_features=self.input_dim + self.output_dim,
+                       out_features=self.first_attn_layer_output_dim,
+                       bias=True),
+                Linear(in_features=self.first_attn_layer_output_dim,
+                       out_features=1,
+                       bias=True)
+            )
+        elif num_attn_layers == 3:
+            self.attention: Module = Sequential(
+                Linear(in_features=self.input_dim + self.output_dim,
+                       out_features=self.first_attn_layer_output_dim,
+                       bias=True),
+                Linear(in_features=first_attn_layer_output_dim,
+                       out_features=int(self.first_attn_layer_output_dim/2),
+                       bias=True),
+                Linear(in_features=int(self.first_attn_layer_output_dim/2),
+                       out_features=1,
+                       bias=True)
+            )
+        elif num_attn_layers == 4:
+            self.attention: Module = Sequential(
+                Linear(in_features=self.input_dim + self.output_dim,
+                       out_features=self.first_attn_layer_output_dim,
+                       bias=True),
+                Linear(in_features=self.first_attn_layer_output_dim,
+                       out_features=int(self.first_attn_layer_output_dim/2),
+                       bias=True),
+                Linear(in_features=int(self.first_attn_layer_output_dim/2),
+                       out_features=int(self.first_attn_layer_output_dim/4),
+                       bias=True),
+                Linear(in_features=int(self.first_attn_layer_output_dim/4),
+                       out_features=1,
+                       bias=True)
+            )
+
         self.gru: Module = GRUCell(self.input_dim, self.output_dim)
         self.classifier: Module = Linear(self.output_dim, self.nb_classes)
 

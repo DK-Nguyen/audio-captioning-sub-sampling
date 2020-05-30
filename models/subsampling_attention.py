@@ -25,7 +25,9 @@ class SubSamplingAttentionModel(Module):
                  nb_classes: int,
                  dropout_p_decoder: float,
                  max_out_t_steps: int,
-                 mode: int) \
+                 mode: int,
+                 num_attn_layers: int,
+                 first_attn_layer_output_dim: int) \
             -> None:
         """
         Recurrent Neural Network with bi-directional GRU and attention
@@ -53,6 +55,10 @@ class SubSamplingAttentionModel(Module):
                      if mode is 1, use decoder with attention (Kostas's version)
                      default = 1
         :type mode: int
+        :param num_attn_layers: number of Linear layers used in the attention mechanism
+        :type num_attn_layers: int
+        :param first_attn_layer_output_dim: the output dimension of the first Linear layer in the attention mechanism
+        :type first_attn_layer_output_dim: int
         """
         super().__init__()
 
@@ -68,19 +74,23 @@ class SubSamplingAttentionModel(Module):
             hidden_dim=hidden_dim_encoder,
             output_dim=output_dim_encoder,
             dropout_p=dropout_p_encoder,
-            subsample_factor=sub_sampling_factor_encoder)
+            subsample_factor=sub_sampling_factor_encoder
+        )
 
         self.decoder_alzheimer: Module = DecoderNoAttention(
             input_dim=output_dim_encoder * 2,
             output_dim=output_dim_h_decoder,
             nb_classes=nb_classes,
-            dropout_p=dropout_p_decoder)
+            dropout_p=dropout_p_decoder
+        )
 
         self.decoder_attention: Module = AttentionDecoder(
             input_dim=output_dim_encoder*2,
             output_dim=output_dim_h_decoder,
             nb_classes=nb_classes,
-            dropout_p=dropout_p_decoder
+            dropout_p=dropout_p_decoder,
+            num_attn_layers=num_attn_layers,
+            first_attn_layer_output_dim=first_attn_layer_output_dim
         )
 
     def forward(self,
@@ -131,10 +141,12 @@ if __name__ == '__main__':
                                       nb_classes=4367,
                                       dropout_p_decoder=0.25,
                                       max_out_t_steps=22,
-                                      mode=1).cuda()
-    print(model.parameters())
+                                      mode=1,
+                                      num_attn_layers=1,
+                                      first_attn_layer_output_dim=128).cuda()
+    print(model)
     y = model(x)
     y_numpy = y.cpu().data.numpy()
-    print(f'SubSamplingAttentionModel output: {y.shape}')
+    print(f'Output of SubSamplingAttentionModel shape: {y.shape}')
 
 # EOF
