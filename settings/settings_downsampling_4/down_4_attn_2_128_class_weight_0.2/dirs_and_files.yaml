@@ -32,10 +32,10 @@ dataset:
 # -----------------------------------
 model:
   model_dir: 'models'
-  checkpoint_model_name: 'down_4_attn_1_512_class_weight_0.2_May30.pt'
+  checkpoint_model_name: 'down_4_attn_2_128_class_weight_0.2_May30.pt'
   pre_trained_model_name: 'nothing_yet.pt'
 # -----------------------------------
 logging:
   logger_dir: 'logging'
-  caption_logger_file: 'down_4_attn_1_512_class_weight_0.2_May30.txt'
+  caption_logger_file: 'down_4_attn_2_128_class_weight_0.2_May30.txt'
 # EOF

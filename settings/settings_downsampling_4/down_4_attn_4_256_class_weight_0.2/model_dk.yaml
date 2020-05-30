@@ -21,8 +21,8 @@ decoder:
   dropout_p_decoder: .25
   max_out_t_steps: 22
   mode: 1
-  num_attn_layers: 1
-  first_attn_layer_output_dim: 512
+  num_attn_layers: 4
+  first_attn_layer_output_dim: 256
 # -----------------------------------
 teacher_forcing:
   gamma_factor: 10
