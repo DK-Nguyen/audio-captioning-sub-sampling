@@ -31,6 +31,6 @@ training:
   nb_examples_to_sample: 100
   use_class_weights: Yes
   use_y: No
-  clamp_value_freqs: !!float 2e-1  # -1 is for ignoring, 0.4 if using use_class_weights
+  clamp_value_freqs: !!float 1e-2  # -1 is for ignoring, 0.4 if using use_class_weights
 
 # EOF

@@ -75,21 +75,8 @@ class AttentionDecoder(Module):
                        out_features=1,
                        bias=True)
             )
-        elif num_attn_layers == 4:
-            self.attention: Module = Sequential(
-                Linear(in_features=self.input_dim + self.output_dim,
-                       out_features=self.first_attn_layer_output_dim,
-                       bias=True),
-                Linear(in_features=self.first_attn_layer_output_dim,
-                       out_features=int(self.first_attn_layer_output_dim/2),
-                       bias=True),
-                Linear(in_features=int(self.first_attn_layer_output_dim/2),
-                       out_features=int(self.first_attn_layer_output_dim/4),
-                       bias=True),
-                Linear(in_features=int(self.first_attn_layer_output_dim/4),
-                       out_features=1,
-                       bias=True)
-            )
+        else:
+            logger_inner.info(f'No more than 3 layers for attention')
 
         self.gru: Module = GRUCell(self.input_dim, self.output_dim)
         self.classifier: Module = Linear(self.output_dim, self.nb_classes)

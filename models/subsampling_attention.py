@@ -136,14 +136,14 @@ if __name__ == '__main__':
                                       hidden_dim_encoder=256,
                                       output_dim_encoder=256,
                                       dropout_p_encoder=0.25,
-                                      sub_sampling_factor_encoder=1,
+                                      sub_sampling_factor_encoder=4,
                                       output_dim_h_decoder=256,
                                       nb_classes=4367,
                                       dropout_p_decoder=0.25,
                                       max_out_t_steps=22,
                                       mode=1,
-                                      num_attn_layers=1,
-                                      first_attn_layer_output_dim=128).cuda()
+                                      num_attn_layers=3,
+                                      first_attn_layer_output_dim=256).cuda()
     print(model)
     y = model(x)
     y_numpy = y.cpu().data.numpy()
