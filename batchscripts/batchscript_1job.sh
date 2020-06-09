@@ -11,6 +11,6 @@
 
 export PYTHONPATH=$PYTHONPATH:.
 source activate audio-captioning
-python main.py -c main_settings -j ${SLURM_JOBID} -d settings/settings_downsampling_1/lr_1e-4_grad_0.5_loss_thr_1e-2_val_class_weights_0.2 -v
+python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling4/no_attn_lr_5e-5_loss_thr_1e-3_class_weight_0.2 -v
 
 echo Done!

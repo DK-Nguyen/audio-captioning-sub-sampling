@@ -4,7 +4,7 @@ from loguru import logger
 from typing import Optional
 
 from torch import zeros, cat, Tensor
-from torch.nn import Module, GRUCell, Linear, Dropout, Sequential
+from torch.nn import Module, GRUCell, Linear, Dropout, Sequential, LeakyReLU
 from torch.nn.functional import softmax
 
 __author__ = 'Konstantinos Drossos -- Tampere University'
@@ -59,6 +59,7 @@ class AttentionDecoder(Module):
                 Linear(in_features=self.input_dim + self.output_dim,
                        out_features=self.first_attn_layer_output_dim,
                        bias=True),
+                LeakyReLU(),
                 Linear(in_features=self.first_attn_layer_output_dim,
                        out_features=1,
                        bias=True)
