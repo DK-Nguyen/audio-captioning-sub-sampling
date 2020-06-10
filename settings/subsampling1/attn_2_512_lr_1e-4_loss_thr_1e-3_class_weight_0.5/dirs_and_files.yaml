@@ -32,10 +32,10 @@ dataset:
 # -----------------------------------
 model:
   model_dir: 'models'
-  checkpoint_model_name: 'attn_2_512_class_weight_0.2_lr5e-5_loss_thr_1e-2_June6.pt'
-  pre_trained_model_name: 'nothing_yet.pt'
+  checkpoint_model_name: 'sub1_attn_2_512_lr_1e-4_loss_thr_1e-3_class_weight_0.5_June10.pt'
+  pre_trained_model_name: 'nothing.pt'
 # -----------------------------------
 logging:
   logger_dir: 'logging'
-  caption_logger_file: 'attn_2_512_class_weight_0.2_lr5e-5_loss_thr_1e-2_June6.txt'
+  caption_logger_file: 'sub1_attn_2_512_lr_1e-4_loss_thr_1e-3_class_weight_0.5_June10.txt'
 # EOF

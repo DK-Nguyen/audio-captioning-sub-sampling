@@ -13,16 +13,16 @@ encoder:
   hidden_dim_encoder: 256
   output_dim_encoder: 256
   dropout_p_encoder: .25
-  sub_sampling_factor_encoder: 4
+  sub_sampling_factor_encoder: 1
 # -----------------------------------
 decoder:
   output_dim_h_decoder: 256
   nb_classes:  # Empty, to be filled automatically.
   dropout_p_decoder: .25
   max_out_t_steps: 22
-  mode: 0
-  num_attn_layers: 0
-  first_attn_layer_output_dim: 0
+  mode: 1
+  num_attn_layers: 2
+  first_attn_layer_output_dim: 512
 # -----------------------------------
 teacher_forcing:
   gamma_factor: 10

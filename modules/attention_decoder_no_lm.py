@@ -19,8 +19,8 @@ class AttentionDecoder(Module):
                  output_dim: int,
                  nb_classes: int,
                  dropout_p: float,
-                 num_attn_layers: int,
-                 first_attn_layer_output_dim: int,
+                 num_attn_layers: int = 0,
+                 first_attn_layer_output_dim: int = 0,
                  max_out_t_steps: Optional[int] = 22) \
             -> None:
         """Attention decoder for the baseline audio captioning method.
