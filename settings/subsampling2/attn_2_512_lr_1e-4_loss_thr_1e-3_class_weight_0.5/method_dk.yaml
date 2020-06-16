@@ -1,0 +1,36 @@
+# ---------------------------------
+# Settings for the baseline method.
+#
+# author: Konstantinos Drossos
+# affiliation: Tampere University
+# ---------------------------------
+model: !include model_dk.yaml
+# ----------------------
+data:
+  input_field_name: 'features'
+  output_field_name: 'words_ind'
+  load_into_memory: No
+  batch_size: 4
+  shuffle: Yes
+  num_workers: 6
+  drop_last: Yes
+  use_multiple_mode: Yes
+  use_validation_split: Yes
+# ----------------------
+training:
+  nb_epochs: 1000
+  patience: 100
+  loss_thr: !!float 1e-3
+  optimizer:
+    lr: !!float 1e-4
+  grad_norm:
+    value: !!float .5
+    norm: 2
+  force_cpu: No
+  text_output_every_nb_epochs: !!int 10
+  nb_examples_to_sample: 100
+  use_class_weights: Yes
+  use_y: No
+  clamp_value_freqs: !!float 5e-1  # -1 is for ignoring, [0.05-0.5] if using use_class_weights
+
+# EOF
