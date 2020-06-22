@@ -254,20 +254,19 @@ def _do_training(model: Module,
     # find maximum and minimum input sequence length in the training dataset
     max_input_sequence = 0
     min_input_sequence = 1e+6
-    num_samples = 0
     for i_batch, sample_batched in enumerate(training_data):
-        x = sample_batched[0]
-        sequence_len = x.shape[1]
-        if sequence_len > max_input_sequence:
-            max_input_sequence = sequence_len
-        if sequence_len < min_input_sequence:
-            min_input_sequence = sequence_len
-        # y = sample_batched[1]
-        # file_name = sample_batched[2]
-        num_samples = i_batch
+        xs = sample_batched[0]
+        ys = sample_batched[1]
+        paths = sample_batched[2]
 
-    logger_main.info(f'num_samples: {num_samples+1}')
-    logger_main.info(f'max sequence: {max_input_sequence}, min sequence: {min_input_sequence}')
+        for x, y, path in zip(xs, ys, paths):
+            sequence_len = x.shape[0]
+            if sequence_len > max_input_sequence:
+                max_input_sequence = sequence_len
+            if sequence_len < min_input_sequence:
+                min_input_sequence = sequence_len
+
+    logger_main.info(f'max sequence length: {max_input_sequence}, min sequence length: {min_input_sequence}')
 
     if settings_data['use_validation_split']:
         logger_main.info('Getting validation data')
