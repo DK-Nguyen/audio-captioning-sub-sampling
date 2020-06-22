@@ -1,6 +1,7 @@
 # Temporal Sub-sampling of Audio Feature Sequences for Audio Captioning 
 
-Set up the project by following the instructions from https://github.com/audio-captioning/dcase-2020-baseline.
+Set up the project by following the instructions from the baseline method
+repository https://github.com/audio-captioning/dcase-2020-baseline.
 
 To conduct an experiment using the sub-sampling for Audio Captioning, 
 run 
