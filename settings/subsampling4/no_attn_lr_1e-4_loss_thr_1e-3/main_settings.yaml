@@ -7,14 +7,14 @@
 # =================================
 workflow:
   dataset_creation: No
-  dnn_training: No
+  dnn_training: Yes
   dnn_evaluation: Yes
 # ---------------------------------
 dataset_creation_settings: !include dataset_creation.yaml
 # -----------------------------------
 feature_extraction_settings: !include feature_extraction.yaml
 # -----------------------------------
-dnn_training_settings: !include method_dk.yaml
+dnn_training_settings: !include method.yaml
 # -----------------------------------
 dirs_and_files: !include dirs_and_files.yaml
 # EOF

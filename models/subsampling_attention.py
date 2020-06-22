@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from loguru import logger
-from torch import Tensor, zeros
+from torch import Tensor
 from torch.nn import Module
 
-from modules.encoder_subsampling_simp import SubSamplingEncoderSimp
+from modules.encoder_subsampling import SubSamplingEncoder
 from modules.decoder_no_attention import DecoderNoAttention
 from modules.attention_decoder_no_lm import AttentionDecoder
 
@@ -52,8 +52,7 @@ class SubSamplingAttentionModel(Module):
         :param max_out_t_steps: Maximum output time-steps of the decoder.
         :type max_out_t_steps: int
         :param mode: if mode is 0, use decoder without attention,
-                     if mode is 1, use decoder with attention (Kostas's version)
-                     default = 1
+                     if mode is 1, use decoder with attention
         :type mode: int
         :param num_attn_layers: number of Linear layers used in the attention mechanism
         :type num_attn_layers: int
@@ -63,13 +62,16 @@ class SubSamplingAttentionModel(Module):
         super().__init__()
 
         logger_inner = logger.bind(is_caption=False, indent=1)
-        logger_inner.info(f'Sub sampling attention model, mode {mode}')
+        if mode == 0:
+            logger_inner.info(f'Sub sampling attention model, mode {mode} - no attention')
+        elif mode == 1:
+            logger_inner.info(f'Sub sampling attention model, mode {mode} - no attention')
 
         self.mode = mode
         self.max_out_t_steps: int = max_out_t_steps
         self.nb_classes: int = nb_classes
 
-        self.encoder: Module = SubSamplingEncoderSimp(
+        self.encoder: Module = SubSamplingEncoder(
             input_dim=input_dim_encoder,
             hidden_dim=hidden_dim_encoder,
             output_dim=output_dim_encoder,

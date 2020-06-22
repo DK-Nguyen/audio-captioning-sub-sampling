@@ -14,7 +14,6 @@ from torch.optim import Adam
 from torch.nn.functional import softmax
 from loguru import logger
 
-from modules.lsr_loss import LabelSmoothingRegularization
 from tools import file_io, printing
 from tools.argument_parsing import get_argument_parser
 from tools.model import module_epoch_passing, get_model,\
@@ -251,6 +250,24 @@ def _do_training(model: Module,
         is_training=True,
         settings_data=settings_data,
         settings_io=settings_io)
+
+    # find maximum and minimum input sequence length in the training dataset
+    max_input_sequence = 0
+    min_input_sequence = 1e+6
+    num_samples = 0
+    for i_batch, sample_batched in enumerate(training_data):
+        x = sample_batched[0]
+        sequence_len = x.shape[1]
+        if sequence_len > max_input_sequence:
+            max_input_sequence = sequence_len
+        if sequence_len < min_input_sequence:
+            min_input_sequence = sequence_len
+        # y = sample_batched[1]
+        # file_name = sample_batched[2]
+        num_samples = i_batch
+
+    logger_main.info(f'num_samples: {num_samples+1}')
+    logger_main.info(f'max sequence: {max_input_sequence}, min sequence: {min_input_sequence}')
 
     if settings_data['use_validation_split']:
         logger_main.info('Getting validation data')

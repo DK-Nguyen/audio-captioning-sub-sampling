@@ -13,9 +13,7 @@ from torch.nn.utils import clip_grad_norm_
 from torch.utils.data import DataLoader
 from torch.optim.optimizer import Optimizer
 
-from models import BaselineModel, ModelWithLM, BaselineDCASE, \
-    SubSamplingAttentionModel, ModelWithLM2
-    # OptimusPrime
+from models import BaselineModel, BaselineDCASE, SubSamplingAttentionModel
 
 __author__ = 'Konstantinos Drossos -- Tampere University'
 __docformat__ = 'reStructuredText'
@@ -64,24 +62,12 @@ def get_model(settings_model: MutableMapping[str, Union[str, MutableMapping]],
 
     model_name = settings_model['model_name']
 
-    if model_name == 'lm':
-        kwargs.update(settings_model['teacher_forcing'])
-        kwargs.update(settings_model['extra_arguments'])
-        model = ModelWithLM
-    elif model_name == 'lm-extra':
-        kwargs.update(settings_model['teacher_forcing'])
-        kwargs.update(settings_model['extra_arguments'])
-        model = ModelWithLM2
-    elif model_name == 'baseline':
+    if model_name == 'baseline':
         model = BaselineModel
     elif model_name == 'baseline_dcase':
         model = BaselineDCASE
-    # elif model_name == 'optimus_prime':
-    #     model = OptimusPrime
-    elif model_name == 'dk':
+    elif model_name == 'sub_sampling':
         model = SubSamplingAttentionModel
-    elif model_name == 'optimus_prime_tf':
-        pass
     else:
         raise AttributeError(f'Unknown model type '
                              f'{settings_model["model_name"]}.')
