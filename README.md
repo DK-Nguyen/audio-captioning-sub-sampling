@@ -10,7 +10,7 @@ run
 python main.py -c main_settings -j 0 -d settings/subsampling4/no_attn_lr_1e-4_loss_thr_1e-3 -v 
 ```
 
-### Settings for the baseline model
+### Settings for the sub-sampling method
 
 The file `settings/subsampling4/no_attn_lr_1e-4_loss_thr_1e-3/model.yaml` holds the settings for the baseline DNN:
     
