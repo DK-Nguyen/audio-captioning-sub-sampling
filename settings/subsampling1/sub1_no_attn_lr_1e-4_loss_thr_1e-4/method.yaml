@@ -10,7 +10,7 @@ data:
   input_field_name: 'features'
   output_field_name: 'words_ind'
   load_into_memory: No
-  batch_size: 16
+  batch_size: 8
   shuffle: Yes
   num_workers: 6
   drop_last: Yes
