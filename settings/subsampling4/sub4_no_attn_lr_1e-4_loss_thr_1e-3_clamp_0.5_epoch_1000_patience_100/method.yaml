@@ -15,7 +15,7 @@ data:
   num_workers: 6
   drop_last: Yes
   use_multiple_mode: Yes
-  use_validation_split: No
+  use_validation_split: Yes
 # ----------------------
 training:
   nb_epochs: 1000
