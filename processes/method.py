@@ -266,7 +266,7 @@ def _do_training(model: Module,
             if sequence_len < min_input_sequence:
                 min_input_sequence = sequence_len
 
-    logger_main.info(f'max sequence length: {max_input_sequence}, min sequence length: {min_input_sequence}')
+    # logger_main.info(f'max sequence length: {max_input_sequence}, min sequence length: {min_input_sequence}')
 
     if settings_data['use_validation_split']:
         logger_main.info('Getting validation data')

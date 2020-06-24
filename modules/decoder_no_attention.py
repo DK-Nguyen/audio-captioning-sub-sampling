@@ -53,7 +53,8 @@ class DecoderNoAttention(Module):
         :return: Output predictions.
         :rtype: torch.Tensor
         """
-        return self.classifier(self.rnn(self.dropout(x))[0])
-
+        # return self.classifier(self.rnn(self.dropout(x))[0])
+        # print('no dec drop out')
+        return self.classifier(self.rnn(x)[0])
 
 # EOF
