@@ -20,7 +20,7 @@ data:
 training:
   nb_epochs: 1000
   patience: 100
-  loss_thr: !!float 1e-4
+  loss_thr: !!float 1e-3
   optimizer:
     lr: !!float 1e-4
   grad_norm:
@@ -29,8 +29,8 @@ training:
   force_cpu: No
   text_output_every_nb_epochs: !!int 10
   nb_examples_to_sample: 100
-  use_class_weights: No
+  use_class_weights: Yes
   use_y: No
-  clamp_value_freqs: !!float -1  # -1 is for ignoring, [0.05-0.5] if using use_class_weights
+  clamp_value_freqs: !!float 0.5  # -1 is for ignoring, [0.05-0.5] if using use_class_weights
 
 # EOF

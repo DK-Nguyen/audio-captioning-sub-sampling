@@ -32,10 +32,10 @@ dataset:
 # -----------------------------------
 model:
   model_dir: 'models'
-  checkpoint_model_name: 'sub_4_no_attn_lr_1e-4_loss_thr_1e-4_clamp_0.5.pt'
+  checkpoint_model_name: 'sub16_no_attn_lr_1e-4_loss_thr_1e-3_clamp_0.5_epoch_1000_patience_100.pt'
   pre_trained_model_name: 'nothing-yet.pt'
 # -----------------------------------
 logging:
   logger_dir: 'logging'
-  caption_logger_file: 'sub_4_no_attn_lr_1e-4_loss_thr_1e-4_clamp_0.5.txt'
+  caption_logger_file: 'sub16_no_attn_lr_1e-4_loss_thr_1e-3_clamp_0.5_epoch_1000_patience_100.txt'
 # EOF
