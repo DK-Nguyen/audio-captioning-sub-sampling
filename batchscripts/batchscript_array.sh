@@ -18,7 +18,7 @@ case $SLURM_ARRAY_TASK_ID in
   2) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling2/sub2_no_attn_lr_1e-4_lossthr_1e-3_noval_freqclamp_0.5_gradnorm_0.5_epochs_1000_patience_100_nodecdropout -v;;
   3) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling4/sub4_no_attn_lr_1e-4_lossthr_1e-3_noval_freqclamp_0.5_gradnorm_0.5_epochs_1000_patience_100_nodecdropout -v;;
   4) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling8/sub8_no_attn_lr_1e-4_lossthr_1e-3_noval_freqclamp_0.5_gradnorm_0.5_epochs_1000_patience_100_nodecdropout -v;;
-  4) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling16/sub16_no_attn_lr_1e-4_lossthr_1e-3_noval_freqclamp_0.5_gradnorm_0.5_epochs_1000_patience_100_nodecdropout -v;;
+  5) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling16/sub16_no_attn_lr_1e-4_lossthr_1e-3_noval_freqclamp_0.5_gradnorm_0.5_epochs_1000_patience_100_nodecdropout -v;;
 esac
 
 echo Done!
