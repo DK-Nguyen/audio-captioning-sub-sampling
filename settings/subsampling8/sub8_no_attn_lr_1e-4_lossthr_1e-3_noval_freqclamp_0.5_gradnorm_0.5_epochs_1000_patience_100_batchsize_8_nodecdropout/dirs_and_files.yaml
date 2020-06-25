@@ -32,10 +32,10 @@ dataset:
 # -----------------------------------
 model:
   model_dir: 'models'
-  checkpoint_model_name: 'sub8_no_attn_lr_1e-4_lossthr_1e-3_noval_freqclamp_0.5_gradnorm_0.5_epochs_1000_patience_100_nodecdropout.pt'
+  checkpoint_model_name: 'sub8_no_attn_lr_1e-4_lossthr_1e-3_noval_freqclamp_0.5_gradnorm_0.5_epochs_1000_patience_100_batchsize_8_nodecdropout.pt'
   pre_trained_model_name: 'nothing-yet.pt'
 # -----------------------------------
 logging:
   logger_dir: 'logging'
-  caption_logger_file: 'sub8_no_attn_lr_1e-4_lossthr_1e-3_noval_freqclamp_0.5_gradnorm_0.5_epochs_1000_patience_100_nodecdropout.txt'
+  caption_logger_file: 'sub8_no_attn_lr_1e-4_lossthr_1e-3_noval_freqclamp_0.5_gradnorm_0.5_epochs_1000_patience_100_batchsize_8_nodecdropout.txt'
 # EOF
