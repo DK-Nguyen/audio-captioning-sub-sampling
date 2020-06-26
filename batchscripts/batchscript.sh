@@ -7,11 +7,12 @@
 #SBATCH --nodes 1
 #SBATCH -p gpu
 #SBATCH --gres=gpu:teslav100:1
+#SBATCH --mem-per-gpu=32000
 #SBATCH -t 5-23:59:00
 
 export PYTHONPATH=$PYTHONPATH:.
 source activate audio-captioning
 
-python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling16/sub16_no_attn_lr_1e-4_loss_thr_1e-3_clamp_0.5_epoch_1000_patience_100 -v
+python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling1/sub1_params_same_baseline_nodecdropout_epoch_1000 -v
 
 echo Done!
