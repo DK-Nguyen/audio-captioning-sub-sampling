@@ -32,10 +32,10 @@ dataset:
 # -----------------------------------
 model:
   model_dir: 'models'
-  checkpoint_model_name: 'sub8_params_same_baseline_hasdecdropout_epoch_1000.pt'
+  checkpoint_model_name: 'sub8_params_same_baseline_hasdecdropout_epoch_1000_loadmemory.pt'
   pre_trained_model_name: 'nothing-yet.pt'
 # -----------------------------------
 logging:
   logger_dir: 'logging'
-  caption_logger_file: 'sub8_params_same_baseline_hasdecdropout_epoch_1000.txt'
+  caption_logger_file: 'sub8_params_same_baseline_hasdecdropout_epoch_1000_loadmemory.txt'
 # EOF
