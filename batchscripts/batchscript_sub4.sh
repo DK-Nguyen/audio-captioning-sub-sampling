@@ -4,8 +4,6 @@
 #SBATCH -o outputs/outputs_run/out_%A_%a.txt
 #SBATCH -e outputs/errs_run/err_%A_%a.txt
 #SBATCH --mem-per-cpu=70000
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=10
 #SBATCH --nodes 1
 #SBATCH -p gpu
 #SBATCH --gres=gpu:teslav100:1
