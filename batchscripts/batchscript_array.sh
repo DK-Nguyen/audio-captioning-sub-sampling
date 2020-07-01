@@ -7,7 +7,7 @@
 #SBATCH --nodes 1
 #SBATCH -p gpu
 #SBATCH --gres=gpu:teslav100:1
-#SBATCH --array=1-5
+#SBATCH --array=1-3
 #SBATCH -t 5-23:59:00
 
 export PYTHONPATH=$PYTHONPATH:.
