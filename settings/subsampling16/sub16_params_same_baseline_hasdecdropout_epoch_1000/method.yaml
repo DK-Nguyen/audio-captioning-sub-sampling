@@ -12,7 +12,7 @@ data:
   load_into_memory: Yes
   batch_size: 16
   shuffle: Yes
-  num_workers: 10
+  num_workers: 0
   drop_last: Yes
   use_multiple_mode: No
   use_validation_split: No
