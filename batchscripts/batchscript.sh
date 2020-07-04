@@ -7,11 +7,11 @@
 #SBATCH --nodes 1
 #SBATCH -p gpu
 #SBATCH --gres=gpu:teslav100:1
-#SBATCH -t 5-23:59:00
+#SBATCH -t 6-23:59:00
 
 export PYTHONPATH=$PYTHONPATH:.
 source activate audio-captioning
 
-python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling1/sub1_params_same_baseline_hasdecdropout_epoch_1000 -v
+python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling1/sub1_same_training_params_baseline_epoch_1000_attn_2_512 -v
 
 echo Done!
