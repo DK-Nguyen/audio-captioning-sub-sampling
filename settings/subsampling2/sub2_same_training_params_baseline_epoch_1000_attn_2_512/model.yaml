@@ -6,21 +6,21 @@
 # ---------------------------------
 model_name: 'sub_sampling'
 # -----------------------------------
-use_pre_trained_model: Yes
+use_pre_trained_model: No
 # -----------------------------------
 encoder:
   input_dim_encoder: 64
   hidden_dim_encoder: 256
   output_dim_encoder: 256
   dropout_p_encoder: .25
-  sub_sampling_factor_encoder: 1
+  sub_sampling_factor_encoder: 2
 # -----------------------------------
 decoder:
   output_dim_h_decoder: 256
   nb_classes:  # Empty, to be filled automatically.
   dropout_p_decoder: .25
   max_out_t_steps: 22
-  mode: 0 # mode 0 for no attention, mode 1 for attention
-  num_attn_layers: 0 # number of layers if using attention
-  first_attn_layer_output_dim: 0
+  mode: 1 # mode 0 for no attention, mode 1 for attention
+  num_attn_layers: 2 # number of layers if using attention
+  first_attn_layer_output_dim: 512
 # EOF

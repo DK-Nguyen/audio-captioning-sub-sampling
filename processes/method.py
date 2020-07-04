@@ -151,6 +151,7 @@ def _do_evaluation(model: Module,
     :param indices_list: Sequence with the words of the captions.
     :type indices_list: list[str]
     """
+
     model.eval()
     logger_main = logger.bind(is_caption=False, indent=1)
 
@@ -176,10 +177,18 @@ def _do_evaluation(model: Module,
     logger.bind(is_caption=True, indent=0).info(
         f'{starting_text}.\n\n')
 
-    with no_grad():
-        evaluation_outputs = module_epoch_passing(
-            data=validation_data, module=model,
-            objective=None, optimizer=None)
+    num_loops = 100
+    module_epoch_passing_start = time()
+    for i in range(num_loops):
+        with no_grad():
+            evaluation_outputs = module_epoch_passing(
+                data=validation_data, module=model,
+                objective=None, optimizer=None)
+    module_epoch_passing_end = time()
+    hours, rem = divmod((module_epoch_passing_end-module_epoch_passing_start)/num_loops, 3600)
+    minutes, secs = divmod(rem, 60)
+    logger_main.info('average module_epoch_passing: {:0>2}:{:0>2}:{:05.2f}'
+                     .format(int(hours), int(minutes), secs))
 
     captions_pred, captions_gt = _decode_outputs(
         evaluation_outputs[1],

@@ -185,7 +185,7 @@ def module_forward_passing(data: MutableSequence[Tensor],
     x, y, f_names = [i.to(device) if isinstance(i, Tensor)
                      else i for i in data]
     in_args = [x, y if use_y else None]
-    # return module(*in_args), y, f_names
-    return module(x), y, f_names
+    # return module(*in_args), y, f_names  # this is used in the baseline model
+    return module(x), y, f_names  # this is used in the sub_sampling models
 
 # EOF

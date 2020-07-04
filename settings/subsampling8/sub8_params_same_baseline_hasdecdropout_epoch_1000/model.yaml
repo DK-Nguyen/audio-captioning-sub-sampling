@@ -6,7 +6,7 @@
 # ---------------------------------
 model_name: 'sub_sampling'
 # -----------------------------------
-use_pre_trained_model: No
+use_pre_trained_model: Yes
 # -----------------------------------
 encoder:
   input_dim_encoder: 64

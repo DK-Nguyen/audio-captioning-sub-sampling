@@ -33,7 +33,7 @@ dataset:
 model:
   model_dir: 'models'
   checkpoint_model_name: 'sub16_params_same_baseline_hasdecdropout_epoch_1000_loadmemory.pt'
-  pre_trained_model_name: 'nothing-yet.pt'
+  pre_trained_model_name: 'epoch_00277_sub16_params_same_baseline_hasdecdropout_epoch_1000_loadmemory.pt'
 # -----------------------------------
 logging:
   logger_dir: 'logging'

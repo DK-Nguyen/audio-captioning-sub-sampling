@@ -11,15 +11,18 @@ root_dirs:
 dataset:
   development: &dev 'development'
   evaluation: &eva 'evaluation'
+  test: &test 'test'
   features_dirs:
     output: 'data_splits'
     development: *dev
     evaluation: *eva
+    test: *test
   audio_dirs:
     downloaded: 'clotho_audio_files'
     output: 'data_splits_audio'
     development: *dev
     evaluation: *eva
+    test: *test
   annotations_dir: 'clotho_csv_files'
   pickle_files_dir: 'pickles'
   files:
@@ -28,14 +31,17 @@ dataset:
     words_counter_file_name: 'words_frequencies.p'
     characters_list_file_name: 'characters_list.p'
     characters_frequencies_file_name: 'characters_frequencies.p'
-    validation_files_file_name: 'validation_file_names.p'
 # -----------------------------------
 model:
   model_dir: 'models'
-  checkpoint_model_name: 'sub2_params_same_baseline_hasdecdropout_epoch_1000_loadmemory.pt'
-  pre_trained_model_name: 'epoch_00366_sub2_params_same_baseline_hasdecdropout_epoch_1000_loadmemory.pt'
+  checkpoint_model_name: 'dcase_model_baseline.pt'
+  pre_trained_model_name: 'dcase_model_baseline_pre_trained.pt'
 # -----------------------------------
 logging:
   logger_dir: 'logging'
-  caption_logger_file: 'sub2_params_same_baseline_hasdecdropout_epoch_1000_loadmemory.txt'
+  caption_logger_file: 'captions_baseline.txt'
+# -----------------------------------
+submissions:
+  submissions_dir: 'submissions'
+  submission_file: 'caption_predictions.csv'
 # EOF
