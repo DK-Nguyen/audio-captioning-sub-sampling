@@ -14,11 +14,11 @@ export PYTHONPATH=$PYTHONPATH:.
 source activate audio-captioning
 
 case $SLURM_ARRAY_TASK_ID in
-  1) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling1/sub1_same_training_params_baseline_epoch_1000_attn_2_512 -v;;
-  2) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling2/sub2_same_training_params_baseline_epoch_1000_attn_2_512 -v;;
-  3) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling4/sub4_same_training_params_baseline_epoch_1000_attn_2_512 -v;;
-  4) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling8/sub8_same_training_params_baseline_epoch_1000_attn_2_512 -v;;
-  5) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling16/sub16_same_training_params_baseline_epoch_1000_attn_2_512 -v;;
+  1) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling1/sub1_same_training_params_baseline_epoch_1000_attn_1 -v;;
+  2) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling2/sub2_same_training_params_baseline_epoch_1000_attn_1 -v;;
+  3) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling4/sub4_same_training_params_baseline_epoch_1000_attn_1 -v;;
+  4) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling8/sub8_same_training_params_baseline_epoch_1000_attn_1 -v;;
+  5) python main.py -c main_settings -j ${SLURM_JOBID} -d settings/subsampling16/sub16_same_training_params_baseline_epoch_1000_attn_1 -v;;
 esac
 
 echo Done!

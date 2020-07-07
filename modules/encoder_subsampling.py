@@ -102,31 +102,33 @@ class SubSamplingEncoder(Module):
 
         # let's take an example input x with size [16, 2584, 64], sub_sampling rate = 4
 
-        # down_x = self._sub_sampling(x)  # [16, 646, 512]
         # batch_size, first_layer_time_steps, _ = down_x.shape
         batch_size, first_layer_time_steps, _ = x.shape
 
         # first layer gru
-        output_1 = self.gru_1(x)[0]
+        output_1 = self.gru_1(x)[0]  # H1: [16, 2584, 512]
         output_1 = output_1.view(batch_size, first_layer_time_steps, 2, -1)  # unpacking: [16, 2584, 2, 256]
         output_1 = self.dropout(cat([output_1[:, :, 0, :], output_1[:, :, 1, :]], dim=-1))
-        output_1 = self._sub_sampling(output_1)  # [16, 646, 512]
+        output_1 = self._sub_sampling(output_1)  # H1'': [16, 646, 512]
 
         # second layer gru
         _, second_layer_time_steps, _ = output_1.shape
         output_2 = self.gru_2(output_1)[0]
         output_2 = output_2.view(batch_size, second_layer_time_steps, 2, -1)  # unpacking: [16, 646, 2, 256]
-        output_2 = self.dropout(cat([output_2[:, :, 0, :], output_2[:, :, 1, :]], dim=-1))
+        output_2 = self.dropout(cat([output_2[:, :, 0, :], output_2[:, :, 1, :]], dim=-1))  # H2': [16, 646, 512]
         output_2 = self._sub_sampling(output_2)  # [16, 162, 512]
 
         # third layer gru
         _, third_layer_time_steps, _ = output_2.shape
-        input_third_layer = output_2 + self._sub_sampling(output_1)
+        input_third_layer = output_2 + self._sub_sampling(output_1)  # H2'': [16, 162, 512]
         output_3, hidden_3 = self.gru_3(input_third_layer)
         output_3 = output_3.view(batch_size, third_layer_time_steps, 2, -1)  # unpacking: [16, 162, 2, 256]
-        output_3 = self.dropout(cat([output_3[:, :, 0, :], output_3[:, :, 1, :]], dim=-1))  # [16, 162, 512]
+        output_3 = self.dropout(cat([output_3[:, :, 0, :], output_3[:, :, 1, :]], dim=-1))  # H3: [16, 162, 512]
         hidden_3 = hidden_3.view(batch_size, 1, -1)
 
+        # note: H2'' = sub_sampling(H2') + sub_sampling(H1'') [line 123]
+        #            = sub_sampling(H2' + H1'') [illustrated in figure 1 of the paper & thesis]
+        # in other words, sub_sampling is a linear function
         return output_3, hidden_3
 
 
