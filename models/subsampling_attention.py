@@ -25,9 +25,7 @@ class SubSamplingAttentionModel(Module):
                  nb_classes: int,
                  dropout_p_decoder: float,
                  max_out_t_steps: int,
-                 mode: int,
-                 num_attn_layers: int,
-                 first_attn_layer_output_dim: int) \
+                 mode: int) \
             -> None:
         """
         Recurrent Neural Network with bi-directional GRU and attention
@@ -54,10 +52,6 @@ class SubSamplingAttentionModel(Module):
         :param mode: if mode is 0, use decoder without attention,
                      if mode is 1, use decoder with attention
         :type mode: int
-        :param num_attn_layers: number of Linear layers used in the attention mechanism
-        :type num_attn_layers: int
-        :param first_attn_layer_output_dim: the output dimension of the first Linear layer in the attention mechanism
-        :type first_attn_layer_output_dim: int
         """
         super().__init__()
 
@@ -92,9 +86,7 @@ class SubSamplingAttentionModel(Module):
                 input_dim=output_dim_encoder * 2,
                 output_dim=output_dim_h_decoder,
                 nb_classes=nb_classes,
-                dropout_p=dropout_p_decoder,
-                num_attn_layers=num_attn_layers,
-                first_attn_layer_output_dim=first_attn_layer_output_dim
+                dropout_p=dropout_p_decoder
             )
 
     def forward(self,
@@ -122,7 +114,7 @@ class SubSamplingAttentionModel(Module):
             # print(f'input shape: {x.shape}')
             encoder_outputs: Tensor = self.encoder(x)[0]
             # print(f'encoder output shape: {encoder_outputs.shape}')
-            output = self.decoder_attention(encoder_outputs)
+            output = self.decoder_attention(encoder_outputs)  # the attention uses the whole outputs of the encoder
 
         assert output.shape == (batch_size, self.max_out_t_steps, self.nb_classes), \
             'output shape of the network is not of the right shape'
@@ -139,14 +131,12 @@ if __name__ == '__main__':
                                       hidden_dim_encoder=256,
                                       output_dim_encoder=256,
                                       dropout_p_encoder=0.25,
-                                      sub_sampling_factor_encoder=4,
+                                      sub_sampling_factor_encoder=8,
                                       output_dim_h_decoder=256,
                                       nb_classes=4367,
                                       dropout_p_decoder=0.25,
                                       max_out_t_steps=22,
-                                      mode=0,
-                                      num_attn_layers=0,
-                                      first_attn_layer_output_dim=0).cuda()
+                                      mode=1).cuda()
     print(model)
     y = model(x)
     y_numpy = y.cpu().data.numpy()
