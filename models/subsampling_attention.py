@@ -21,6 +21,7 @@ class SubSamplingAttentionModel(Module):
                  output_dim_encoder: int,
                  dropout_p_encoder: float,
                  sub_sampling_factor_encoder: int,
+                 sub_sampling_mode: int,
                  output_dim_h_decoder: int,
                  nb_classes: int,
                  dropout_p_decoder: float,
@@ -57,9 +58,9 @@ class SubSamplingAttentionModel(Module):
 
         logger_inner = logger.bind(is_caption=False, indent=1)
         if mode == 0:
-            logger_inner.info(f'Sub sampling attention model, mode {mode} - no attention')
+            logger_inner.info(f'Sub sampling attention model {mode} - no attention')
         elif mode == 1:
-            logger_inner.info(f'Sub sampling attention model, mode {mode} - no attention')
+            logger_inner.info(f'Sub sampling attention model {mode} - use attention')
 
         self.mode = mode
         self.max_out_t_steps: int = max_out_t_steps
@@ -70,7 +71,8 @@ class SubSamplingAttentionModel(Module):
             hidden_dim=hidden_dim_encoder,
             output_dim=output_dim_encoder,
             dropout_p=dropout_p_encoder,
-            subsample_factor=sub_sampling_factor_encoder
+            sub_sampling_factor=sub_sampling_factor_encoder,
+            sub_sampling_mode=sub_sampling_mode
         )
 
         if self.mode == 0:
@@ -131,12 +133,13 @@ if __name__ == '__main__':
                                       hidden_dim_encoder=256,
                                       output_dim_encoder=256,
                                       dropout_p_encoder=0.25,
-                                      sub_sampling_factor_encoder=8,
+                                      sub_sampling_factor_encoder=4,
+                                      sub_sampling_mode=1,
                                       output_dim_h_decoder=256,
                                       nb_classes=4367,
                                       dropout_p_decoder=0.25,
                                       max_out_t_steps=22,
-                                      mode=1).cuda()
+                                      mode=0).cuda()
     print(model)
     y = model(x)
     y_numpy = y.cpu().data.numpy()

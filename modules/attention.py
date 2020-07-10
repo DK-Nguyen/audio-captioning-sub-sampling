@@ -45,7 +45,7 @@ class Attention(Module):
             for l_dim_i, l_dim in enumerate(layers_dim[1:-1]):
                 extra_layers.append(
                         Linear(in_features=layers_dim[l_dim_i],
-                        out_features=l_dim))
+                               out_features=l_dim))
                 extra_layers.append(LeakyReLU())
                 extra_layers.append(Dropout(dropout_p))
             extra_layers.append(Linear(

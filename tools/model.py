@@ -72,6 +72,7 @@ def get_model(settings_model: MutableMapping[str, Union[str, MutableMapping]],
         raise AttributeError(f'Unknown model type '
                              f'{settings_model["model_name"]}.')
 
+    # print(', '.join(['{}={!r}'.format(k, v) for k, v in kwargs.items()]))
     model = model(**kwargs)
 
     if settings_model['use_pre_trained_model']:

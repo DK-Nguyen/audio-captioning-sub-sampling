@@ -1,0 +1,25 @@
+# ---------------------------------
+# Settings for the model.
+#
+# author: Konstantinos Drossos
+# affiliation: Tampere University
+# ---------------------------------
+model_name: 'sub_sampling'
+# -----------------------------------
+use_pre_trained_model: No
+# -----------------------------------
+encoder:
+  input_dim_encoder: 64
+  hidden_dim_encoder: 256
+  output_dim_encoder: 256
+  dropout_p_encoder: .25
+  sub_sampling_factor_encoder: 4
+  sub_sampling_mode: 1 # 0 for dropping, 1 for linear, 2 for maxout linear, 3 for rnn
+# -----------------------------------
+decoder:
+  output_dim_h_decoder: 256
+  nb_classes:  # Empty, to be filled automatically.
+  dropout_p_decoder: .25
+  max_out_t_steps: 22
+  mode: 0 # 0 for no attention, 1 for attention
+# EOF
