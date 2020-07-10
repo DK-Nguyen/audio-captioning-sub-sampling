@@ -76,10 +76,10 @@ class SubSamplingEncoder(Module):
         )
 
         if self.sub_sampling_mode == 0:
-            logger_inner.info(f'Using dropping sub-sampling')
+            logger_inner.info(f'Using dropping sub-sampling with factor {self.sub_sampling_factor}')
 
         elif self.sub_sampling_mode == 1:
-            logger_inner.info(f'Using linear sub-sampling')
+            logger_inner.info(f'Using linear sub-sampling with factor {self.sub_sampling_factor}')
             self.linear_subsampling: Module = Sequential(
                 Linear(in_features=self.hidden_dim*2*self.sub_sampling_factor,
                        out_features=self.hidden_dim*2),
@@ -87,14 +87,14 @@ class SubSamplingEncoder(Module):
             )
 
         elif self.sub_sampling_mode == 2:
-            logger_inner.info(f'Using linear maxout sub-sampling')
+            logger_inner.info(f'Using linear maxout sub-sampling with factor {self.sub_sampling_factor}')
             self.maxout_linear_1: Module = Linear(in_features=self.hidden_dim*2*self.sub_sampling_factor,
                                                   out_features=self.hidden_dim*2)
             self.maxout_linear_2: Module = Linear(in_features=self.hidden_dim*2*self.sub_sampling_factor,
                                                   out_features=self.hidden_dim*2)
 
         elif self.sub_sampling_mode == 3:
-            logger_inner.info(f'Using rnn sub-sampling')
+            logger_inner.info(f'Using rnn sub-sampling with factor {self.sub_sampling_factor}')
             self.rnn_sub_sampling: Module = GRU(
                 input_size=self.hidden_dim*2,
                 hidden_size=self.output_dim,
