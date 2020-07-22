@@ -6,6 +6,7 @@ import pickle
 from time import time
 from typing import MutableMapping, MutableSequence,\
     Any, Union, List, Dict, Tuple, Optional
+import math
 
 from torch import Tensor, no_grad, save as pt_save, \
     load as pt_load
@@ -261,20 +262,19 @@ def _do_training(model: Module,
         settings_io=settings_io)
 
     # find maximum and minimum input sequence length in the training dataset
-    max_input_sequence = 0
-    min_input_sequence = 1e+6
-    for i_batch, sample_batched in enumerate(training_data):
-        xs = sample_batched[0]
-        ys = sample_batched[1]
-        paths = sample_batched[2]
-
-        for x, y, path in zip(xs, ys, paths):
-            sequence_len = x.shape[0]
-            if sequence_len > max_input_sequence:
-                max_input_sequence = sequence_len
-            if sequence_len < min_input_sequence:
-                min_input_sequence = sequence_len
-
+    # max_input_sequence = 0
+    # min_input_sequence = 1e+6
+    # for i_batch, sample_batched in enumerate(training_data):
+    #     xs = sample_batched[0]
+    #     ys = sample_batched[1]
+    #     paths = sample_batched[2]
+    #
+    #     for x, y, path in zip(xs, ys, paths):
+    #         sequence_len = x.shape[0]
+    #         if sequence_len > max_input_sequence:
+    #             max_input_sequence = sequence_len
+    #         if sequence_len < min_input_sequence:
+    #             min_input_sequence = sequence_len
     # logger_main.info(f'max sequence length: {max_input_sequence}, min sequence length: {min_input_sequence}')
 
     if settings_data['use_validation_split']:
@@ -310,9 +310,10 @@ def _do_training(model: Module,
         frequencies_tensor = None
 
     if settings_training.get('use_lsr', False):
-        objective = LabelSmoothingRegularization(
-            nb_classes=model.nb_classes,
-            eps=settings_training['lsr_loss']['eps'])
+        # objective = LabelSmoothingRegularization(
+        #     nb_classes=model.nb_classes,
+        #     eps=settings_training['lsr_loss']['eps'])
+        pass
     else:
         objective = CrossEntropyLoss(weight=frequencies_tensor)
 
@@ -363,7 +364,6 @@ def _do_training(model: Module,
             val_loss_str = '--'
 
             early_stopping_dif = prv_validation_metric - validation_metric
-
 
         if settings_data['use_validation_split']:
             # Check if we have to decode captions for the current epoch

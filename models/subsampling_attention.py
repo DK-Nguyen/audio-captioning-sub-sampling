@@ -106,7 +106,7 @@ class SubSamplingAttentionModel(Module):
         batch_size, _, _ = x.shape
 
         if self.mode == 0:  # sub-sampling encoder, no attention decoder
-            encoder_outputs: Tensor = self.encoder(x)[0]
+            encoder_outputs: Tensor = self.encoder(x)
             encoder_outputs = encoder_outputs[:, -1, :]  # get the last time step (fixed context vector)
             encoder_outputs = encoder_outputs.unsqueeze(1)\
                 .expand(-1, self.max_out_t_steps, -1)  # modify the shape
@@ -133,8 +133,8 @@ if __name__ == '__main__':
                                       hidden_dim_encoder=256,
                                       output_dim_encoder=256,
                                       dropout_p_encoder=0.25,
-                                      sub_sampling_factor_encoder=4,
-                                      sub_sampling_mode=1,
+                                      sub_sampling_factor_encoder=16,
+                                      sub_sampling_mode=3,
                                       output_dim_h_decoder=256,
                                       nb_classes=4367,
                                       dropout_p_decoder=0.25,
