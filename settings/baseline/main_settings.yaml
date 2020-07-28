@@ -6,8 +6,8 @@
 # affiliation: Tampere University
 # =================================
 workflow:
-  dataset_creation: No
-  dnn_training: No
+  dataset_creation: Yes
+  dnn_training: Yes
   dnn_evaluation: Yes
   dnn_testing: No
 

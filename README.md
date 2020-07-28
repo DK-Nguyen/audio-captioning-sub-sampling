@@ -7,8 +7,10 @@ To conduct an experiment using the sub-sampling for Audio Captioning,
 run 
 
 ```
-python main.py -c main_settings -j 0 -d settings/subsampling4/no_attn_lr_1e-4_loss_thr_1e-3 -v 
+python main.py -c main_settings -j 0 -d <path_to_settings> -v 
 ```
+with `path_to_setting` being the path to the directory that contains 
+`.yaml` files, e.g. `settings/baseline`.
 
 ### Settings for the sub-sampling method
 
