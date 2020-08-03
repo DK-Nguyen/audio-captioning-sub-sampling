@@ -1,14 +1,16 @@
 from typing import Optional, List, Union, \
     OrderedDict, MutableSequence, Dict
-import numpy as np
-from re import sub as re_sub
-from librosa import load
-from pathlib import Path
 import csv
+import pickle
+from re import sub as re_sub
+from pathlib import Path
 from functools import partial
 from collections import Counter
 from itertools import chain
-import pickle
+
+import numpy as np
+from librosa import load
+from librosa.feature import melspectrogram
 
 
 # ---------- Functions for processing captions ----------
@@ -204,3 +206,68 @@ def dump_numpy_object_demo(np_obj: np.ndarray,
         if replace_ext and (file_name.suffix != ext or file_name.suffix == "") \
         else file_name
     np.save(f'{f_name}', np_obj)
+
+
+def load_numpy_object_demo(file_name: Path)\
+        -> Union[np.ndarray, np.recarray]:
+    """Loads and returns a numpy object.
+
+    :param file_name: File name of the numpy object.
+    :type file_name: pathlib.Path
+    :return: Numpy object.
+    :rtype: numpy.ndarray|numpy.rec.array
+    """
+    return np.load(str(file_name), allow_pickle=True)
+
+
+def feature_extraction_demo(audio_data: np.ndarray,
+                            sr: int,
+                            nb_fft: int,
+                            hop_size: int,
+                            nb_mels: int,
+                            f_min: float,
+                            f_max: float,
+                            htk: bool,
+                            power: float,
+                            norm: bool,
+                            window_function: str,
+                            center: bool)\
+        -> np.ndarray:
+    """Feature extraction function.
+
+    :param audio_data: Audio signal.
+    :type audio_data: numpy.ndarray
+    :param sr: Sampling frequency.
+    :type sr: int
+    :param nb_fft: Amount of FFT points.
+    :type nb_fft: int
+    :param hop_size: Hop size in samples.
+    :type hop_size: int
+    :param nb_mels: Amount of MEL bands.
+    :type nb_mels: int
+    :param f_min: Minimum frequency in Hertz for MEL band calculation.
+    :type f_min: float
+    :param f_max: Maximum frequency in Hertz for MEL band calculation.
+    :type f_max: float|None
+    :param htk: Use the HTK Toolbox formula instead of Auditory toolkit.
+    :type htk: bool
+    :param power: Power of the magnitude.
+    :type power: float
+    :param norm: Area normalization of MEL filters.
+    :type norm: bool
+    :param window_function: Window function.
+    :type window_function: str
+    :param center: Center the frame for FFT.
+    :type center: bool
+    :return: Log mel-bands energies of shape=(t, nb_mels)
+    :rtype: numpy.ndarray
+    """
+    y = audio_data/abs(audio_data).max()  # normalizing
+    mel_bands = melspectrogram(
+        y=y, sr=sr, n_fft=nb_fft, hop_length=hop_size, win_length=nb_fft,
+        window=window_function, center=center, power=power, n_mels=nb_mels,
+        fmin=f_min, fmax=f_max, htk=htk, norm=norm).T
+    e = np.finfo(float).eps  # machine epsilon (also called unit roundoff)
+    log_mel_bands = np.log(mel_bands + e)  # rounding the mel_bands value, then get the log
+
+    return log_mel_bands
