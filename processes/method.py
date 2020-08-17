@@ -80,7 +80,7 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
 
     for gt_words, b_predictions, f_name in zip(
             ground_truth_outputs, predicted_outputs, file_names):
-        predicted_words = softmax(b_predictions, dim=-1).argmax(1)
+        predicted_words = softmax(b_predictions, dim=-1).argmax(1)  # use log-softmax
 
         predicted_caption = [indices_object[i.item()]
                              for i in predicted_words]

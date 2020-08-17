@@ -140,7 +140,6 @@ class SubSamplingEncoder(Module):
         batch_size, num_time_steps, num_features = x.shape
         trimmed_x: Tensor = x[:, :(num_time_steps - num_time_steps % self.sub_sampling_factor), :]
         num_chunks: int = int(trimmed_x.shape[1] / self.sub_sampling_factor)
-        # print(f'trimmed x shape: {trimmed_x.shape}')
         y: Tensor = torch.empty(batch_size, num_chunks, num_features).cuda()
 
         if self.sub_sampling_mode == 0:  # drop feature vectors (non_learnable sub_sampling)
@@ -169,7 +168,8 @@ class SubSamplingEncoder(Module):
                 )
 
         elif self.sub_sampling_mode == 3:  # using rnn as the learnable sub_sampling
-            x_: Tensor = torch.reshape(trimmed_x, (-1, self.sub_sampling_factor, num_features))
+            x_: Tensor = torch.reshape(trimmed_x,
+                                       (-1, self.sub_sampling_factor, num_features))
             if layer == 1:
                 h: Tensor = self.rnn_sub_sampling_1(x_)[-1]
                 y = h.view(batch_size, -1, num_features)
@@ -195,6 +195,7 @@ class SubSamplingEncoder(Module):
                     torch.Tensor of shape [batch_size, 1, output_dim_encoder*2]
         """
 
+        # refer to https://arxiv.org/abs/2007.02676 for more information in details
         # let's take an example input x with size [16, 2584, 64], sub_sampling rate = 4
 
         # batch_size, first_layer_time_steps, _ = down_x.shape
@@ -202,13 +203,11 @@ class SubSamplingEncoder(Module):
 
         # first layer gru
         h1 = self.gru_1(x)[0]  # H1: [16, 2584, 512]
-        # unpacking then concatenate the output according to
+        # unpacking then concatenate the output of gru layer according to
         # https://pytorch.org/docs/master/generated/torch.nn.GRU.html
         h1 = h1.view(batch_size, first_layer_time_steps, 2, -1)  # unpacking: [16, 2584, 2, 256]
         h1 = self.dropout(torch.cat([h1[:, :, 0, :], h1[:, :, 1, :]], dim=-1))  # H1: [16, 2584, 512]
-        # doing subsampling
         h1_pp = self._sub_sampling(h1, layer=1)  # H1'': [16, 646, 512]
-        # print(f'h1_pp shape: {h1_pp.shape}')
 
         # second layer gru
         _, second_layer_time_steps, _ = h1_pp.shape
@@ -217,14 +216,12 @@ class SubSamplingEncoder(Module):
         h2_p = self.dropout(torch.cat([h2_p[:, :, 0, :], h2_p[:, :, 1, :]], dim=-1))  # H2': [16, 646, 512]
         h2 = h1_pp + h2_p  # residual connection
         h2_pp = self._sub_sampling(h2, layer=2)  # H2'': [16, 161, 512]
-        # print(f'h2_pp shape: {h2_pp.shape}')
 
         # third layer gru
         _, third_layer_time_steps, _ = h2_pp.shape
         h3_p, _ = self.gru_3(h2_pp)
         h3_p = h3_p.view(batch_size, third_layer_time_steps, 2, -1)  # unpacking: [16, 161, 2, 256]
         h3 = self.dropout(torch.cat([h3_p[:, :, 0, :], h3_p[:, :, 1, :]], dim=-1))  # H3: [16, 161, 512]
-        # print(f'h3 shape: {h3.shape}')
 
         return h3
 
@@ -237,7 +234,7 @@ if __name__ == '__main__':
                                          output_dim=256,
                                          dropout_p=0.25,
                                          sub_sampling_factor=1,
-                                         sub_sampling_mode=3).cuda()
+                                         sub_sampling_mode=0).cuda()
     print(encoder)
     print(f'Input to encoder sub-sampling shape: {encoder_input.shape}')
     encoder_outputs = encoder(encoder_input)

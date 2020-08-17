@@ -127,14 +127,14 @@ class SubSamplingAttentionModel(Module):
 if __name__ == '__main__':
     import torch
 
-    x = torch.rand((1, 2584, 64)).cuda()
+    x = torch.rand((16, 2584, 64)).cuda()
     print(f'Input to SubSamplingAttentionModel shape: {x.shape}')
     model = SubSamplingAttentionModel(input_dim_encoder=64,
                                       hidden_dim_encoder=256,
                                       output_dim_encoder=256,
                                       dropout_p_encoder=0.25,
-                                      sub_sampling_factor_encoder=16,
-                                      sub_sampling_mode=3,
+                                      sub_sampling_factor_encoder=1,
+                                      sub_sampling_mode=0,
                                       output_dim_h_decoder=256,
                                       nb_classes=4367,
                                       dropout_p_decoder=0.25,
