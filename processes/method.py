@@ -6,13 +6,12 @@ import pickle
 from time import time
 from typing import MutableMapping, MutableSequence,\
     Any, Union, List, Dict, Tuple, Optional
-import math
 
 from torch import Tensor, no_grad, save as pt_save, \
     load as pt_load
 from torch.nn import CrossEntropyLoss, Module, DataParallel
 from torch.optim import Adam
-from torch.nn.functional import softmax
+from torch.nn.functional import softmax, log_softmax
 from loguru import logger
 
 from tools import file_io, printing
@@ -80,7 +79,7 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
 
     for gt_words, b_predictions, f_name in zip(
             ground_truth_outputs, predicted_outputs, file_names):
-        predicted_words = softmax(b_predictions, dim=-1).argmax(1)  # use log-softmax
+        predicted_words = log_softmax(b_predictions, dim=-1).argmax(1)  # use log-softmax
 
         predicted_caption = [indices_object[i.item()]
                              for i in predicted_words]
@@ -97,7 +96,8 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
         predicted_caption = ' '.join(predicted_caption)
         gt_caption = ' '.join(gt_caption)
 
-        f_n = f_name.stem.split('.')[0]
+        # f_n = f_name.stem.split('.')[0]
+        f_n = f_name.stem[:-6]
 
         if f_n not in f_names:
             f_names.append(f_n)
@@ -178,7 +178,7 @@ def _do_evaluation(model: Module,
     logger.bind(is_caption=True, indent=0).info(
         f'{starting_text}.\n\n')
 
-    num_loops = 100
+    num_loops = 1
     module_epoch_passing_start = time()
     for i in range(num_loops):
         with no_grad():
@@ -188,7 +188,7 @@ def _do_evaluation(model: Module,
     module_epoch_passing_end = time()
     hours, rem = divmod((module_epoch_passing_end-module_epoch_passing_start)/num_loops, 3600)
     minutes, secs = divmod(rem, 60)
-    logger_main.info('average module_epoch_passing: {:0>2}:{:0>2}:{:05.2f}'
+    logger_main.info('Average module_epoch_passing: {:0>2}:{:0>2}:{:05.2f}'
                      .format(int(hours), int(minutes), secs))
 
     captions_pred, captions_gt = _decode_outputs(
@@ -197,7 +197,7 @@ def _do_evaluation(model: Module,
         indices_object=indices_list,
         file_names=sorted(list(data_path_evaluation.iterdir())),
         eos_token='<eos>',
-        print_to_console=False)
+        print_to_console=True)
 
     logger_main.info('Evaluation done')
 
