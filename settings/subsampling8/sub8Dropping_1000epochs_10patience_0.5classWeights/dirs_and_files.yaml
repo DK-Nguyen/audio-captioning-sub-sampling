@@ -32,10 +32,10 @@ dataset:
 # -----------------------------------
 model:
   model_dir: 'models'
-  checkpoint_model_name: 'sub4Dropping_sameTrainingParamsBaseline_1000epochs_noAttention_logSoftmax.pt'
+  checkpoint_model_name: 'sub8Dropping_1000epochs_10patience_0.5classWeights.pt'
   pre_trained_model_name: '.pt'
 # -----------------------------------
 logging:
   logger_dir: 'logging'
-  caption_logger_file: 'sub4Dropping_sameTrainingParamsBaseline_1000epochs_noAttention_logSoftmax.txt'
+  caption_logger_file: 'sub8Dropping_1000epochs_10patience_0.5classWeights.txt'
 # EOF

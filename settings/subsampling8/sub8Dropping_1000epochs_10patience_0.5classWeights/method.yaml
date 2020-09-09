@@ -29,7 +29,7 @@ training:
   force_cpu: No
   text_output_every_nb_epochs: !!int 10
   nb_examples_to_sample: 100
-  use_class_weights: No
+  use_class_weights: Yes
   use_y: No
   clamp_value_freqs: !!float 5e-1  # -1 is for ignoring, [0.05-0.5] if using use_class_weights
 

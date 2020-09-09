@@ -21,5 +21,5 @@ decoder:
   nb_classes:  # Empty, to be filled automatically.
   dropout_p_decoder: .25
   max_out_t_steps: 22
-  mode: 0 # 0 for no attention, 1 for attention
+  mode: 0 # mode 0 for no attention, mode 1 for attention
 # EOF
