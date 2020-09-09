@@ -67,7 +67,7 @@ class Attention(Module):
     def forward(self,
                 x: Tensor,
                 context: Tensor) \
-        -> Tensor:
+            -> Tensor:
         """Forward function of attention.
 
         :param x: Input tensor.

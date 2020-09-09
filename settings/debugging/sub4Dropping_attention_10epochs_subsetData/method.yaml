@@ -18,7 +18,7 @@ data:
   use_validation_split: No
 # ----------------------
 training:
-  nb_epochs: 1000
+  nb_epochs: 10
   patience: 10
   loss_thr: !!float 1e-4
   optimizer:
