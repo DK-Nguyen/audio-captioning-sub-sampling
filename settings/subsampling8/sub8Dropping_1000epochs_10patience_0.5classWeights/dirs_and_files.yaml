@@ -32,10 +32,10 @@ dataset:
 # -----------------------------------
 model:
   model_dir: 'models'
-  checkpoint_model_name: 'sub1Dropping_1000epochs_100patience_0.5classWeights.pt'
+  checkpoint_model_name: 'sub8Dropping_1000epochs_10patience_0.5classWeights.pt'
   pre_trained_model_name: '.pt'
 # -----------------------------------
 logging:
   logger_dir: 'logging'
-  caption_logger_file: 'sub1Dropping_1000epochs_100patience_0.5classWeights.txt'
+  caption_logger_file: 'sub8Dropping_1000epochs_10patience_0.5classWeights.txt'
 # EOF
