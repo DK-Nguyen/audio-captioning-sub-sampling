@@ -198,7 +198,7 @@ def _do_evaluation(model: Module,
         indices_object=indices_list,
         file_names=sorted(list(data_path_evaluation.iterdir())),
         eos_token='<eos>',
-        print_to_console=True)
+        print_to_console=False)
 
     logger_main.info('Evaluation done')
 
